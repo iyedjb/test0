@@ -1,0 +1,56 @@
+modules = ["nodejs-20", "web", "postgresql-16"]
+run = "npm run dev"
+hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
+
+[nix]
+channel = "stable-24_05"
+
+[deployment]
+deploymentTarget = "autoscale"
+build = ["npm", "run", "build"]
+run = ["npm", "run", "start"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[env]
+PORT = "5000"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000
+
+[agent]
+integrations = ["javascript_openai:1.0.0"]
+
+[userenv]
+
+[userenv.shared]
+VITE_FIREBASE_API_KEY = "AIzaSyDie6LGStopyQ4jv0BHi-K1JAb87kUgnzA"
+VITE_FIREBASE_AUTH_DOMAIN = "brtn-3ce9e.firebaseapp.com"
+VITE_FIREBASE_DATABASE_URL = "https://brtn-3ce9e-default-rtdb.firebaseio.com"
+VITE_FIREBASE_PROJECT_ID = "brtn-3ce9e"
+VITE_FIREBASE_STORAGE_BUCKET = "brtn-3ce9e.firebasestorage.app"
+VITE_FIREBASE_MESSAGING_SENDER_ID = "984290830872"
+VITE_FIREBASE_APP_ID = "1:984290830872:web:ed613a9802664026f7716d"
+VITE_FIREBASE_MEASUREMENT_ID = "G-Q3HYHPRK9G"
+FIREBASE_DATABASE_URL = "https://brtn-3ce9e-default-rtdb.firebaseio.com"
+FIREBASE_ADMIN_SDK = '{"type":"service_account","project_id":"brtn-3ce9e","private_key_id":"d62b238466a5e04b334ab6394b307a46cd644a6a","private_key":"-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCcAxPBZteyyWz2\nTApgnfCFnDPIS9sfLNNPYOq3DvmjVYvx74Sw2iVH5n+I1WudbHVeA6Snlhv5EhLf\nodTh7F+IbkUpZf19zMJ/qwRRSMzzw5P/zjV4O2K8ernFgMiDcTy8J9fdvOhTWYrF\nlPzyiWPrdo8XU393kTx2oGj3u42G7jV7NbGwAzbMUCXjVRV1k/KIhrQVi/2MPtME\nMFmyrCHT0nOjPRzXx6w+3f52NVQ4kucaZ11nZ1BbNhLc8UG56HTngORW2M/dVF3k\n7OF3n2uTygh8YtUanRLBcSXUaavuKlF2irZCE0SgHGDh4UkGqr4DBRJ6s9PgQHVO\neW6imujdAgMBAAECggEAA3KlrQ0FuXclIRwL0KpheMOXC2BgE0Q7ICTBiOSS5xNB\natxwmxA/IIhNeRl4Ek6BGTtxhcHDuOzJr9lmzsw+Ta03Ve70BP82Gp8ySbsEytBW\ne8Zqhj00mei/kmx5HWOun7h3IHi+qD4Mkbci/fMxyMJPpfZAXkTjEYzvkFzgYzDA\nrWFzGOXkub0WPwD+Mv8z4iMV9RsPqkMSqOwzoG00SbWjRDsLP2pN4NIr0QOwHZJn\njSlW6H/OqVsuiNikLeaAyjaEnQGs7m+J31pJ6+2rXtgHWPQfccM1hzFTrDELkyHF\n9bzzXDmQXsJvuZmzXmPR2XDQHHOvIfsaGfr+dIY6KwKBgQDJ1hkb/exyftG1YBun\nM6hAdnxITnpqGQ/dJA8V/BqttKjS03VM9eG5kMDcEdFqqKz6Jfnm13/gbO3RSFVd\neHMcdXIwaTGuNviUvrEBvdbFVk9vt9djhD7SOkvN0fZr1JI11zL9I0MLau/xmHso\nX6SRg1R4GBE+1OqDTmCxihiiawKBgQDF4Og7cLE9I80L3I4yp+/Bvck1RCr6+2rK\nzJ+SARYeWWCtktwd+eOzBvxvqcCFIjhSG7+6lvLcHKtiAnEc9eCWcoINNYCCbVlE\n9UU0t7jw/cPW2USPFlwnyZEvsblzGXgzV9MNqki57U69bgmg66V1+A308voFh8c0\nGorEh1nD1wKBgQC/EdAZYKtqxEWQF1h2U3+u7ru+05QtRmZvKYiiflNfJ8w+MPI1\nlftG6RK6AqAmAWInOLY3YsBq25PS8E/nuXP3d/NOgvcF/oIahd8ZT/a2P3vZvcbI\nLdQuvgMu59oIwGZdU8iwPKZmc6iMJJZKZShsnE/llJsWyQbsoNEGoT2q2wKBgAaU\nQsRvK8Vvokqpq6SthsA3UjBOMuujXlqd0RRmqtiZeihrQJxSiaqTKeOAjmEe0SaR\nu581k5+T6HLax+4BktUNu5s60yoC/rvXN9TX4vNITLGhCbGEOc4s2oHuc88K4r86\nRU8oAUEFTd/of7N1AkxY0gX56iwy5oGp/EEqiuaDAoGADncFyjrdcTCub2e0tTje\nP61TWcon/tNuMjUuEkz5vZuc1He2vgKgeuRGku+t0zT9UD4IWCDmMosCLNANqJBp\nOBmuRQs3F/yKKj5MJ5z2ZajmqgOMlS56HJEu+fiqeVoQx9F/Vm5LFXcjTnqCzRbs\nt6WPip5RDwUaJRvcKgDE+4E=\n-----END PRIVATE KEY-----\n","client_email":"firebase-adminsdk-fbsvc@brtn-3ce9e.iam.gserviceaccount.com","client_id":"109303440911913273760","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_x509_cert_url":"https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40brtn-3ce9e.iam.gserviceaccount.com","universe_domain":"googleapis.com"}'
